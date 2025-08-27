@@ -15,9 +15,12 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../../components/general-components/app-theme';
 import ColorModeSelect from '../../components/login/colorModeSelects';
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../../components/login/CustomIcons';
+import SitemarkIcon from '../../components/general-components/sitemark';
+import { useState } from 'react';
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
+  overflow: 'auto',
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'center',
@@ -60,46 +63,9 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignUp(props) {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+  const [error, setError] = useState("");
 
   const validateInputs = () => {
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-    const name = document.getElementById('name');
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Name is required.');
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage('');
-    }
 
     return isValid;
   };
@@ -138,17 +104,37 @@ export default function SignUp(props) {
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
             <FormControl>
-              <FormLabel htmlFor="name">Full name</FormLabel>
+              <FormLabel htmlFor="firstName">First name</FormLabel>
               <TextField
-                autoComplete="name"
-                name="name"
+                autoComplete="firstName"
+                name="firstName"
                 required
                 fullWidth
-                id="name"
-                placeholder="Jon Snow"
-                error={nameError}
-                helperText={nameErrorMessage}
-                color={nameError ? 'error' : 'primary'}
+                id="firstName"
+                placeholder="Jon"
+              />
+            </FormControl>
+             <FormControl>
+              <FormLabel htmlFor="secondName">Second name</FormLabel>
+              <TextField
+                autoComplete="secondName"
+                name="secondName"
+                required
+                fullWidth
+                id="secondName"
+                placeholder="Smith"
+              />
+            </FormControl>
+
+             <FormControl>
+              <FormLabel htmlFor="userName">User name</FormLabel>
+              <TextField
+                autoComplete="userName"
+                name="userName"
+                required
+                fullWidth
+                id="userName"
+                placeholder="jon123"
               />
             </FormControl>
             <FormControl>
@@ -161,9 +147,7 @@ export default function SignUp(props) {
                 name="email"
                 autoComplete="email"
                 variant="outlined"
-                error={emailError}
-                helperText={emailErrorMessage}
-                color={passwordError ? 'error' : 'primary'}
+
               />
             </FormControl>
             <FormControl>
@@ -177,15 +161,9 @@ export default function SignUp(props) {
                 id="password"
                 autoComplete="new-password"
                 variant="outlined"
-                error={passwordError}
-                helperText={passwordErrorMessage}
-                color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive updates via email."
-            />
+           
             <Button
               type="submit"
               fullWidth
@@ -199,26 +177,12 @@ export default function SignUp(props) {
             <Typography sx={{ color: 'text.secondary' }}>or</Typography>
           </Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign up with Google')}
-              startIcon={<GoogleIcon />}
-            >
-              Sign up with Google
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign up with Facebook')}
-              startIcon={<FacebookIcon />}
-            >
-              Sign up with Facebook
-            </Button>
+      
+       
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?{' '}
               <Link
-                href="/material-ui/getting-started/templates/sign-in/"
+                href="/signin"
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >

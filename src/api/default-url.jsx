@@ -1,0 +1,1 @@
+export const defaultUrl = "https://localhost:7073/api/";

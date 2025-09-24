@@ -1,18 +1,27 @@
 import { Button, ListItem, ListItemText, Stack } from "@mui/material";
 import { useState } from "react";
+import DeleteTopicButton from "./topic-delete-button";
+import DeactivateTopicButton from "./topic-deactivate-button";
+import ActivateTopicButton from "./topic-activate-button";
 
-export default function TopicItem(props) {
+export default function TopicItem({ topic, type }) {
   return (
     <>
-      <ListItem key={props.topic.id} sx={{ py: 1, px: 0, border:1 }}>
+      <ListItem key={topic.id} sx={{ py: 1, px: 0, border: 1 }}>
         <Stack direction="row">
           <ListItemText
             sx={{ mr: 2 }}
-            primary={props.topic.name}
-            secondary={props.topic.name}
+            primary={topic.name}
+            secondary={topic.name}
           />
-          <Button>Deactivate</Button>
-          <Button>Delete</Button>
+          {type == "Active" ? (
+            <DeactivateTopicButton topic={topic} />
+          ) : (
+            <>
+              <ActivateTopicButton topic={topic} />
+              <DeleteTopicButton topic={topic}/>
+            </>
+          )}
         </Stack>
       </ListItem>
     </>

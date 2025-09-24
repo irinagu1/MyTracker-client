@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import {
   fetchActiveTopics,
   fetchUnactiveTopics,
-} from "../../features/topics/fetch-activeTopics";
+} from "../../features/topics/fetch-topics";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Topics(props) {
@@ -28,14 +28,13 @@ export default function Topics(props) {
     fetchInfo();
   }, []);
   return (
-    <AppTheme {...props}>
-      <CssBaseline enableColorScheme />
+    <>
+
       <Stack sx={{ flex: 1, my: 2 }} spacing={2}>
         <TopicHeader />
-      
         <TopicBox topics={activeTopics} name="Active" />
         <TopicBox topics={unactiveTopics} name="Unactive" />
       </Stack>
-    </AppTheme>
+    </>
   );
 }

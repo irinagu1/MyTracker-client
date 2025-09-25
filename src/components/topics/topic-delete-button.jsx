@@ -13,15 +13,20 @@ import {
   AlertSeverityError,
   AlertSeveritySuccess,
 } from "../general-components/custom-snackbar";
+import {
+  BackendErrorMessage,
+  SuccessMessage,
+} from "../../features/general/alert-messages";
+import {
+  AlertOpen,
+  GetPayloadObject,
+} from "../../redux-store/reducers/alert-reducer";
+import { DeleteUnactiveTopic } from "../../redux-store/reducers/topic-reducer";
 
 export default function DeleteTopicButton({ topic }) {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
-
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertSeverity, setAlertSeverity] = useState(AlertSeveritySuccess);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -32,19 +37,28 @@ export default function DeleteTopicButton({ topic }) {
   const handleClickDelete = async () => {
     const result = await deleteTopic(topic.id);
     if (result.status == "error") {
-      ShowAlert("Error on backend part", AlertSeverityError);
+      const payloadObject = GetPayloadObject(
+        AlertSeverityError,
+        BackendErrorMessage
+      );
+      dispatch({
+        type: AlertOpen,
+        payload: payloadObject,
+      });
     } else {
-      dispatch({ type: "DeleteUnactive", payload: topic });
-      ShowAlert("Successfully deactivated!", AlertSeveritySuccess);
+      dispatch({ type: DeleteUnactiveTopic, payload: topic });
+      const payloadObject = GetPayloadObject(
+        AlertSeveritySuccess,
+        SuccessMessage
+      );
+      dispatch({
+        type: AlertOpen,
+        payload: payloadObject,
+      });
       setOpen(false);
     }
   };
 
-  const ShowAlert = (message, severity) => {
-    setAlertOpen(true);
-    setAlertMessage(message);
-    setAlertSeverity(severity);
-  };
   return (
     <>
       <Button variant="outlined" onClick={handleClickOpen}>

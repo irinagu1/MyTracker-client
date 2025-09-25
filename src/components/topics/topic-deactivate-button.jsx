@@ -1,48 +1,47 @@
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-} from "@mui/material";
-import { useState } from "react";
+import { Button } from "@mui/material";
 import deactivateTopic from "../../features/topics/deactivate-topic";
-import CustomSnackbar, {
+import {
   AlertSeverityError,
   AlertSeveritySuccess,
 } from "../general-components/custom-snackbar";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+
+import {
+  BackendErrorMessage,
+  SuccessMessage,
+} from "../../features/general/alert-messages";
+import {
+  AlertOpen,
+  GetPayloadObject,
+} from "../../redux-store/reducers/alert-reducer";
+import { DeactivateTopic } from "../../redux-store/reducers/topic-reducer";
 
 export default function DeactivateTopicButton(props) {
   const dispatch = useDispatch();
 
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertSeverity, setAlertSeverity] = useState(AlertSeveritySuccess);
-
   const handleClickDeactivate = async () => {
     const result = await deactivateTopic(props.topic.id);
-    console.log(result);
-    if (result.status == "error") {
-      ShowAlert("Error on backend part", AlertSeverityError);
-    } else {
-      dispatch({ type: "Deactivate", payload: result.json });
-      ShowAlert("Successfully deactivated!", AlertSeveritySuccess);
-      console.log('showq');
-    }
-  };
 
-  const ShowAlert = (message, severity) => {
-    setAlertOpen(true);
-    setAlertMessage(message);
-    setAlertSeverity(severity);
-  };
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+    if (result.status == "error") {
+      const payloadObject = GetPayloadObject(
+        AlertSeverityError,
+        BackendErrorMessage
+      );
+      dispatch({
+        type: AlertOpen,
+        payload: payloadObject,
+      });
+    } else {
+      dispatch({ type: DeactivateTopic, payload: result.json });
+      const payloadObject = GetPayloadObject(
+        AlertSeveritySuccess,
+        SuccessMessage
+      );
+      dispatch({
+        type: AlertOpen,
+        payload: payloadObject,
+      });
     }
-    setAlertOpen(false);
   };
 
   return (
@@ -50,12 +49,6 @@ export default function DeactivateTopicButton(props) {
       <Button variant="outlined" onClick={handleClickDeactivate}>
         Deactivate
       </Button>
-      <CustomSnackbar
-        open={alertOpen}
-        onClose={handleCloseSnackbar}
-        severity={alertSeverity}
-        message={alertMessage}
-      />
     </>
   );
 }

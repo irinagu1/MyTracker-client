@@ -10,53 +10,72 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import AddTopic from "../../features/topics/add-topic";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { AlertOpen, GetPayloadObject } from "../../redux-store/reducers/alert-reducer";
+import { AlertSeveritySuccess } from "../general-components/custom-snackbar";
+import {
+  BackendErrorMessage,
+  SuccessMessage,
+} from "../../features/general/alert-messages";
+import { AddActiveTopic } from "../../redux-store/reducers/topic-reducer";
 
 export default function TopicHeader() {
   const dispatch = useDispatch();
-  const activeTopics = useSelector((state) => state.topics.activeTopics);
+
   const [newTopicName, setNewTopicName] = useState("");
-  const [open, setOpen] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [openDialogWindow, setOpenDialogWindow] = useState(false);
+  const [hasErrorInTextField, setHasErrorInTextField] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const handleClickOpen = () => {
-    setOpen(true);
+
+  const handleOpenDialogClick = () => {
+    setOpenDialogWindow(true);
   };
-  const handleClose = () => {
+
+  const handleCloseDialog = () => {
     setNewTopicName("");
-    setHasError(false);
+    setHasErrorInTextField(false);
     setErrorMessage("");
-    setOpen(false);
+    setOpenDialogWindow(false);
   };
-  const handleAdd = async () => {
+
+  const handleAddButtonClick = async () => {
     if (newTopicName == "") {
-      setHasError(true);
-      setErrorMessage("Length of new name is 0");
+      handleErrorInTextField(true, "Length of new name is 0");
     } else {
       const res = await AddTopic(newTopicName);
       if (res.status == "error") {
-        setHasError(true);
-        setErrorMessage("sth with backend");
+        handleErrorInTextField(true, BackendErrorMessage);
       } else {
-        dispatch({ type: "AddActive", payload: res.json});
-        setNewTopicName("");
-        setHasError(false);
-        setErrorMessage("");
-        setOpen(false);
+        dispatch({ type: AddActiveTopic, payload: res.json });
+        handleCloseDialog();
+        const payloadObject = GetPayloadObject(
+          AlertSeveritySuccess,
+          SuccessMessage
+        );
+        dispatch({
+          type: AlertOpen,
+          payload: payloadObject,
+        });
       }
     }
   };
 
-  const handleChange = (event) => {
+  const handleErrorInTextField = (isError, message) => {
+    setHasErrorInTextField(isError);
+    setErrorMessage(message);
+  };
+
+  const handleChangeTopicName = (event) => {
     setNewTopicName(event.target.value);
   };
+
   return (
     <>
       <Typography>My topics</Typography>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button variant="outlined" onClick={handleOpenDialogClick}>
         Add new topic
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={openDialogWindow} onClose={handleCloseDialog}>
         <DialogTitle>Add new topic</DialogTitle>
         <DialogContent>
           <DialogContentText>Please enter new topic name</DialogContentText>
@@ -70,14 +89,14 @@ export default function TopicHeader() {
             fullWidth
             variant="standard"
             value={newTopicName}
-            onChange={handleChange}
-            error={hasError}
+            onChange={handleChangeTopicName}
+            error={hasErrorInTextField}
           />
           <Typography sx={{ color: "red" }}>{errorMessage}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAdd}>Add</Button>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleAddButtonClick}>Add</Button>
         </DialogActions>
       </Dialog>
     </>

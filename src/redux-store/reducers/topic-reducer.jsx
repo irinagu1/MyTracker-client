@@ -3,23 +3,23 @@ const defaultTopicReducerState = {
   unactiveTopics: [],
 };
 
-const DownloadActive = "DownloadActive";
-const DownloadUnactive = "DownloadUnactive";
-const AddActive = "AddActive";
-const Deactivate = "Deactivate";
-const Activate = "Activate";
-const DeleteUnactive = "DeleteUnactive";
+export const DownloadActiveTopics = "DownloadActive";
+export const DownloadUnactiveTopics = "DownloadUnactive";
+export const AddActiveTopic = "AddActive";
+export const DeactivateTopic = "Deactivate";
+export const ActivateTopic = "Activate";
+export const DeleteUnactiveTopic = "DeleteUnactive";
 
 export const topicReducer = (state = defaultTopicReducerState, action) => {
   switch (action.type) {
-    case DownloadActive:
+    case DownloadActiveTopics:
       return { ...state, activeTopics: action.payload };
-    case AddActive:
+    case AddActiveTopic:
       return {
         ...state,
         activeTopics: [...state.activeTopics, action.payload],
       };
-    case Deactivate:
+    case DeactivateTopic:
       return {
         ...state,
         activeTopics: state.activeTopics.filter(
@@ -27,21 +27,21 @@ export const topicReducer = (state = defaultTopicReducerState, action) => {
         ),
         unactiveTopics: [...state.unactiveTopics, action.payload],
       };
-    case Activate:
+    case ActivateTopic:
       return {
-        activeTopics: [...state.unactiveTopics, action.payload],
+        activeTopics: [...state.activeTopics, action.payload],
         unactiveTopics: state.unactiveTopics.filter(
           (t) => t.name !== action.payload.name
         ),
       };
-    case DeleteUnactive:
+    case DeleteUnactiveTopic:
       return {
         ...state,
         unactiveTopics: state.unactiveTopics.filter(
           (t) => t.name !== action.payload.name
         ),
       };
-    case DownloadUnactive:
+    case DownloadUnactiveTopics:
       return { ...state, unactiveTopics: action.payload };
     default:
       return state;

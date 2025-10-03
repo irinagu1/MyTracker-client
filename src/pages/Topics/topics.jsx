@@ -1,5 +1,4 @@
-import { Button, CssBaseline, Grid, Stack, Typography } from "@mui/material";
-import AppTheme from "../../components/general-components/app-theme";
+import { Stack } from "@mui/material";
 import TopicBox from "../../components/topics/topic-box";
 import TopicHeader from "../../components/topics/topic-header";
 import { useEffect } from "react";
@@ -9,6 +8,10 @@ import {
 } from "../../features/topics/fetch-topics";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSnackbar from "../../components/general-components/custom-snackbar";
+import {
+  DownloadActiveTopics,
+  DownloadUnactiveTopics,
+} from "../../redux-store/reducers/topic-reducer";
 
 export default function Topics(props) {
   const dispatch = useDispatch();
@@ -19,11 +22,14 @@ export default function Topics(props) {
   useEffect(() => {
     const fetchInfo = async () => {
       const activeTopicsFromDb = await fetchActiveTopics();
-      dispatch({ type: "DownloadActive", payload: activeTopicsFromDb.json });
+      dispatch({
+        type: DownloadActiveTopics,
+        payload: activeTopicsFromDb.json,
+      });
 
       const unactiveTopicsFromDB = await fetchUnactiveTopics();
       dispatch({
-        type: "DownloadUnactive",
+        type: DownloadUnactiveTopics,
         payload: unactiveTopicsFromDB.json,
       });
     };

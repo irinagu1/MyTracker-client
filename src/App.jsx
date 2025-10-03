@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import { store } from "./redux-store/store";
 import MainLogged from "./pages/MainLogged/main-logged";
 import Topics from "./pages/Topics/topics";
+import ActiveItem from "./pages/items/item-active";
 
 function App(props) {
   return (
@@ -23,10 +24,11 @@ function App(props) {
             <CustomHeader>
               <Routes>
                 <Route path="" element={<Main />} />
-                <Route path="/main" element={<MainLogged/>}/>
+                <Route path="/main" element={<MainLogged />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/topics" element={<Topics />} />
+                <Route path="/item" element={<ActiveItem />} />
               </Routes>
             </CustomHeader>
           </AppTheme>

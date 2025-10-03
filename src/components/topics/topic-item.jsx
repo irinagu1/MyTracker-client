@@ -1,8 +1,8 @@
-import { Button, ListItem, ListItemText, Stack } from "@mui/material";
-import { useState } from "react";
+import {ListItem, ListItemText, Stack } from "@mui/material";
 import DeleteTopicButton from "./topic-delete-button";
 import DeactivateTopicButton from "./topic-deactivate-button";
 import ActivateTopicButton from "./topic-activate-button";
+import GoToItemButton from "./topic-navigate-button";
 
 export default function TopicItem({ topic, type }) {
   return (
@@ -15,11 +15,14 @@ export default function TopicItem({ topic, type }) {
             secondary={topic.name}
           />
           {type == "Active" ? (
-            <DeactivateTopicButton topic={topic} />
+            <>
+              <GoToItemButton topic={topic} />
+              <DeactivateTopicButton topic={topic} />
+            </>
           ) : (
             <>
               <ActivateTopicButton topic={topic} />
-              <DeleteTopicButton topic={topic}/>
+              <DeleteTopicButton topic={topic} />
             </>
           )}
         </Stack>
